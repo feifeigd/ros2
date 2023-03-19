@@ -1,0 +1,13 @@
+{
+    "name": "ROS devcontainer for vscode",
+    "dockerFile": "Dockerfile",
+    // "dockerComposeFile":[
+    //     "../docker-compose.yml"
+    // ],
+    "runArgs": [
+        "--privileged",
+        "--network=host"
+    ],
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/src/${localWorkspaceFolderBasename},type=bind",
+    "workspaceFolder": "/workspace"
+}
