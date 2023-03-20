@@ -1,13 +1,31 @@
 {
     "name": "ROS devcontainer for vscode",
-    "dockerFile": "Dockerfile",
-    // "dockerComposeFile":[
-    //     "../docker-compose.yml"
-    // ],
+    /*  "dockerFile": "Dockerfile",
+    
     "runArgs": [
         "--privileged",
         "--network=host"
     ],
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/src/${localWorkspaceFolderBasename},type=bind",
-    "workspaceFolder": "/workspace"
+    */
+
+    "dockerComposeFile":[
+        "../docker-compose.yml"
+    ],
+    "service": "workspace",
+    "workspaceFolder": "/workspace",
+    "shutdownAction": "stopCompose",
+    "customizations": {
+        "vscode": {
+            "extensions":[
+                "ms-vscode.cpptools",
+                "ms-python.python",
+                "ajshort.msg",
+                "twxs.cmake",
+                "redhat.vscode-xml",
+                "actboy168.tasks",
+                "brpaz.file-templates"
+            ]
+        }
+    }
 }
