@@ -18,13 +18,14 @@
     "customizations": {
         "vscode": {
             "extensions":[
-                "ms-vscode.cpptools",
-                "ms-python.python",
-                "ajshort.msg",
-                "twxs.cmake",
-                "redhat.vscode-xml",
                 "actboy168.tasks",
-                "brpaz.file-templates"
+                "ajshort.msg",
+                "brpaz.file-templates",
+                "ms-python.python",
+                "ms-vscode.cmake-tools",
+                "ms-vscode.cpptools",
+                "redhat.vscode-xml",
+                "twxs.cmake"
             ]
         }
     }
