@@ -5,21 +5,28 @@ LABEL author=feifeigd
 # 阿里云 源 
 # COPY 163 /etc/apt/sources.list 
 # Install LXDE,VNC server, XRDP and Firefox
-RUN apt update && apt install -y aptitude
-RUN apt install -y tigervnc-standalone-server
-
-RUN DEBIAN_FRONTEND=noninteractive apt install -y --fix-missing  xfce4 xfce4-goodies
-
-RUN DEBIAN_FRONTEND=noninteractive aptitude install -y software-properties-common && add-apt-repository universe
-# RUN DEBIAN_FRONTEND=noninteractive aptitude install -y gnome-session gnome-terminal
-
-# 安装 ros 环境
 COPY ros.key /usr/share/keyrings/ros-archive-keyring.gpg
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" |  tee /etc/apt/sources.list.d/ros2.list > /dev/null
-RUN apt update && apt upgrade
-RUN DEBIAN_FRONTEND=noninteractive aptitude install -y -o APT::Get::Fix-Missing=true ros-humble-desktop
-RUN aptitude install -y vim ros-dev-tools && echo ". /opt/ros/humble/setup.sh" >> ~/.bashrc
-RUN aptitude install -y -o APT::Get::Fix-Missing=true ~nros-humble-rqt*
+
+# 安装中文字体
+RUN DEBIAN_FRONTEND=noninteractive apt update && apt install -y aptitude \
+    fonts-wqy-zenhei language-pack-zh-hans locales software-properties-common
+
+RUN locale-gen zh_CN.UTF-8 && update-locale LC_ALL=zh_CN.UTF-8 LANG=zh_CN.UTF-8
+ENV LANG zh_CN.UTF-8
+# 下面就有中文了
+RUN add-apt-repository universe && apt update && apt upgrade
+
+RUN apt install -y --fix-missing tigervnc-standalone-server
+
+RUN DEBIAN_FRONTEND=noninteractive apt install -y --fix-missing xfce4
+RUN DEBIAN_FRONTEND=noninteractive apt install -y --fix-missing xfce4-goodies
+
+# 安装 ros 环境
+RUN DEBIAN_FRONTEND=noninteractive aptitude install -y ros-humble-ros-base
+RUN aptitude install -y vim ros-dev-tools
+RUN apt install -y --fix-missing ~nros-humble-rqt*
+RUN DEBIAN_FRONTEND=noninteractive aptitude install -y ros-humble-desktop
 
 RUN apt install -y curl wget
 
@@ -34,6 +41,17 @@ EXPOSE 5901
 # Copy VNC script that handles restarts
 COPY xstartup ~/.vnc/
 COPY vnc.sh /opt/
+
+RUN echo ". /opt/ros/humble/setup.bash" >> ~/.bashrc
+# RUN . ~/.bashrc && ros2 -h
+
+# Setup colcon_cd
+RUN echo "source /usr/share/colcon_cd/function/colcon_cd.sh" >> ~/.bashrc
+RUN echo "export _colcon_cd_root=/opt/ros/humble/" >> ~/.bashrc
+# Setup colcon tab completion
+RUN echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc
+   
+
 CMD [ "/opt/vnc.sh" ]
 # CMD [ "bash" ]
 # docker image build -t ros2 .
