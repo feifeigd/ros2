@@ -15,3 +15,8 @@ colcon build --symlink-install
 ```shell
 colcon test
 ```
+
+# 只编译某个包
+```shell
+colcon build --packages-select cpp_srvcli
+```
